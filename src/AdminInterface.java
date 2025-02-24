@@ -19,3 +19,4 @@ public interface AdminInterface {
 	public void sortCourses();
 	public void writeToFileFullCourses();
 }
+
