@@ -1,614 +1,644 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
-
 import java.io.*;
 import java.util.ArrayList;
 import java.util.Scanner;
 import java.util.StringTokenizer;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.SQLException;
 
 public class Course implements java.io.Serializable {
+	String courseName;
+	String courseID;
+	int maxStudents;
+	int currentStudents;
+	ArrayList<Student> studentList;
+	String departmentName;
+	int courseSection;
+	static ArrayList<Course> courseList = new ArrayList<>();
 
-    String courseName;
-    String courseID;
-    int maxStudents;
-    int currentStudents;
-    ArrayList<Student> studentList;
-    String departmentName;
-    int courseSection;
-    static ArrayList<Course> courseList = new ArrayList<>();
+	Course() {
 
-    Course() {
+	}
 
-    }
+	Course(String courseName, String courseID, int maxStudents, int currentStudents, String departmentName,
+			int courseSection) {
+		this.courseName = courseName;
+		this.courseID = courseID;
+		this.maxStudents = maxStudents;
+		this.currentStudents = currentStudents;
+		this.studentList = new ArrayList<>();
+		this.departmentName = departmentName;
+		this.courseSection = courseSection;
+	}
 
-    Course(String courseName, String courseID, int maxStudents, int currentStudents, String departmentName,
-            int courseSection) {
-        this.courseName = courseName;
-        this.courseID = courseID;
-        this.maxStudents = maxStudents;
-        this.currentStudents = currentStudents;
-        this.studentList = new ArrayList<Student>();
-        this.departmentName = departmentName;
-        this.courseSection = courseSection;
-    }
+	public String print() {
+		String names = "";
 
-    public String print() {
-        String names = "";
+		if (studentList != null) {
+			for (int i = 0; i < studentList.size(); i++) {
+				String addFirst = studentList.get(i).getFirstName();
+				String addLast = studentList.get(i).getLastName();
+				names = names + addFirst + " " + addLast + ", ";
+			}
+			System.out.println("Course: " + courseName + "\n" + "Course ID: " + courseID + "\n"
+					+ "Maximum # of Students: " + maxStudents + "\n" + "Current # of Students: " + currentStudents
+					+ "\n" + "Registered Students: " + names + "\n" + "Department: " + departmentName + "\n"
+					+ "Section: " + courseSection + "\n" + "Location: ");
+			System.out.println("==========");
+			String text1 = "Course: " + courseName + "\n" + "Course ID: " + courseID + "\n" + "Maximum # of Students: "
+					+ maxStudents + "\n" + "Current # of Students: " + currentStudents + "\n" + "Registered Students: "
+					+ names + "\n" + "Department: " + departmentName + "\n" + "Section: " + courseSection + "\n"
+					+ "Location: " ;
+			return (text1);
+		} else {
+			System.out.println("Course: " + courseName + "\n" + "Course ID: " + courseID + "\n"
+					+ "Maximum # of Students: " + maxStudents + "\n" + "Current # of Students: " + currentStudents
+					+ "\n" + "Registered Students: " + studentList + "\n" + "Department: " + departmentName + "\n"
+					+ "Section: " + courseSection + "\n" + "Location: " );
+			System.out.println("==========");
+			String text2 = "Course: " + courseName + "\n" + "Course ID: " + courseID + "\n" + "Maximum # of Students: "
+					+ maxStudents + "\n" + "Current # of Students: " + currentStudents + "\n" + "Registered Students: "
+					+ studentList + "\n" + "Department: " + departmentName + "\n" + "Section: " + courseSection + "\n"
+					+ "Location: " ;
+			return (text2);
+		}
+	}
 
-        if (studentList != null) {
-            for (int i = 0; i < studentList.size(); i++) {
-                String addFirst = studentList.get(i).getFirstName();
-                String addLast = studentList.get(i).getLastName();
-                names = names + addFirst + " " + addLast + ", ";
-            }
-            System.out.println("Course: " + courseName + "\n" + "Course ID: " + courseID + "\n"
-                    + "Maximum # of Students: " + maxStudents + "\n" + "Current # of Students: " + currentStudents
-                    + "\n" + "Registered Students: " + names + "\n" + "Department: " + departmentName + "\n"
-                    + "Section: " + courseSection + "\n" + "Location: ");
-            System.out.println("==========");
-            String text1 = "Course: " + courseName + "\n" + "Course ID: " + courseID + "\n" + "Maximum # of Students: "
-                    + maxStudents + "\n" + "Current # of Students: " + currentStudents + "\n" + "Registered Students: "
-                    + names + "\n" + "Department: " + departmentName + "\n" + "Section: " + courseSection + "\n"
-                    + "Location: ";
-            return (text1);
-        } else {
-            System.out.println("Course: " + courseName + "\n" + "Course ID: " + courseID + "\n"
-                    + "Maximum # of Students: " + maxStudents + "\n" + "Current # of Students: " + currentStudents
-                    + "\n" + "Registered Students: " + studentList + "\n" + "Department: " + departmentName + "\n"
-                    + "Section: " + courseSection + "\n" + "Location: ");
-            System.out.println("==========");
-            String text2 = "Course: " + courseName + "\n" + "Course ID: " + courseID + "\n" + "Maximum # of Students: "
-                    + maxStudents + "\n" + "Current # of Students: " + currentStudents + "\n" + "Registered Students: "
-                    + studentList + "\n" + "Department: " + departmentName + "\n" + "Section: " + courseSection + "\n"
-                    + "Location: ";
-            return (text2);
-        }
-    }
+	public String studentPrint() {
+		System.out.println("Course: " + courseName + "\n" + "Course ID: " + courseID + "\n" + "Maximum # of Students: "
+				+ maxStudents + "\n" + "Current # of Students: " + currentStudents + "\n" + "Registered Students: "
+				+ "\n" + "Department: " + departmentName + "\n" + "Section: " + courseSection + "\n" + "Location: ");
+		System.out.println("==========");
+		String text = "Course: " + courseName + "\n" + "Course ID: " + courseID + "\n" + "Maximum # of Students: "
+				+ maxStudents + "\n" + "Current # of Students: " + currentStudents + "\n" + "Registered Students: "
+				+ "\n" + "Department: " + departmentName + "\n" + "Section: " + courseSection + "\n" + "Location: ";
+		return (text);
+	}
 
-    public String studentPrint() {
-        System.out.println("Course: " + courseName + "\n" + "Course ID: " + courseID + "\n" + "Maximum # of Students: "
-                + maxStudents + "\n" + "Current # of Students: " + currentStudents + "\n" + "Registered Students: "
-                + "\n" + "Department: " + departmentName + "\n" + "Section: " + courseSection + "\n" + "Location: ");
-        System.out.println("==========");
-        String text = "Course: " + courseName + "\n" + "Course ID: " + courseID + "\n" + "Maximum # of Students: "
-                + maxStudents + "\n" + "Current # of Students: " + currentStudents + "\n" + "Registered Students: "
-                + "\n" + "Department: " + departmentName + "\n" + "Section: " + courseSection + "\n" + "Location: ";
-        return (text);
-    }
+	//Getters and Setters
 
-//Getters and Setters
-    public String getCourseName() {
-        return courseName;
-    }
+	public String getCourseName() {
+		return courseName;
+	}
 
-    public void setCourseName(String courseName) {
-        this.courseName = courseName;
-    }
+	public void setCourseName(String courseName) {
+		this.courseName = courseName;
+	}
 
-    public String getCourseID() {
-        return courseID;
-    }
+	public String getCourseID() {
+		return courseID;
+	}
 
-    public void setCourseID(String courseID) {
-        this.courseID = courseID;
-    }
+	public void setCourseID(String courseID) {
+		this.courseID = courseID;
+	}
 
-    public int getMaxStudents() {
-        return maxStudents;
-    }
+	public int getMaxStudents() {
+		return maxStudents;
+	}
 
-    public void setMaxStudents(int maxStudents) {
-        this.maxStudents = maxStudents;
-    }
+	public void setMaxStudents(int maxStudents) {
+		this.maxStudents = maxStudents;
+	}
 
-    public int getCurrentStudents() {
-        return currentStudents;
-    }
+	public int getCurrentStudents() {
+		return currentStudents;
+	}
 
-    public void setCurrentStudents(int currentStudents) {
-        this.currentStudents = currentStudents;
-    }
+	public void setCurrentStudents(int currentStudents) {
+		this.currentStudents = currentStudents;
+	}
 
-    public ArrayList<Student> getStudentList() {
-        return studentList;
-    }
+	public ArrayList<Student> getStudentList() {
+		return studentList;
+	}
 
-    public void setStudentList(ArrayList<Student> studentList) {
-        this.studentList = studentList;
-    }
+	public void setStudentList(ArrayList<Student> studentList) {
+		this.studentList = studentList;
+	}
 
-    public String getDepartmentName() {
-        return departmentName;
-    }
+	public String getDepartmentName() {
+		return departmentName;
+	}
 
-    public void setDepartmentName(String departmentName) {
-        this.departmentName = departmentName;
-    }
+	public void setDepartmentName(String departmentName) {
+		this.departmentName = departmentName;
+	}
 
-    public int getCourseSection() {
-        return courseSection;
-    }
+	public int getCourseSection() {
+		return courseSection;
+	}
 
-    public void setCourseSection() {
-        this.courseSection = courseSection;
-    }
+	public void setCourseSection() {
+		this.courseSection = courseSection;
+	}
 
-    public static void deSerialization() {
-        try {
-            FileInputStream fis = new FileInputStream("CRSData.ser");
-            ObjectInputStream ois = new ObjectInputStream(fis);
+	public static void deSerialization() {
+		try {
+			FileInputStream fis = new FileInputStream("CRSData.ser");
+			ObjectInputStream ois = new ObjectInputStream(fis);
 
-            courseList = (ArrayList<Course>) ois.readObject();
-            ois.close();
-            fis.close();
-            System.out.println("Deserialization complete");
-        } catch (IOException ioe) {
-            ioe.printStackTrace();
-        } catch (ClassNotFoundException c) {
-            System.out.println("Class not found");
-            c.printStackTrace();
-        }
-    }
+			courseList = (ArrayList<Course>) ois.readObject();
+			ois.close();
+			fis.close();
+			System.out.println("Deserialization complete");
+		} catch (IOException ioe) {
+			ioe.printStackTrace();
+		} catch (ClassNotFoundException c) {
+			System.out.println("Class not found");
+			c.printStackTrace();
+		}
+	}
 
-    public static void serialization() {
-        try {
-            FileOutputStream fos = new FileOutputStream("CRSData.ser");
-            ObjectOutputStream oos = new ObjectOutputStream(fos);
+	public static void serialization() {
+		try {
+			FileOutputStream fos = new FileOutputStream("CRSData.ser");
+			ObjectOutputStream oos = new ObjectOutputStream(fos);
 
-            oos.writeObject(courseList);
-            oos.close();
-            fos.close();
-            System.out.println("Serialization complete");
-        } catch (IOException ioe) {
-            ioe.printStackTrace();
-        }
-    }
+			oos.writeObject(courseList);
+			oos.close();
+			fos.close();
+			System.out.println("Serialization complete");
+		} catch (IOException ioe) {
+			ioe.printStackTrace();
+		}
+	}
 
-    public static void main(String[] args) throws FileNotFoundException, IOException {
-        Admin admin = new Admin();
-        File fileName = new File("CRSData.ser");
-        if (!fileName.exists()) {
-            fileName = new File("MyUniversityCourses.csv");
-
-// References one line at a time
-            String line = null;
-
+	public static void main(String[] args) throws FileNotFoundException, IOException {
             try {
-// FileReader reads text files as characters as opposed to bytes (like
-// FileInputStream)
-// First, we instantiate the file reader class
-// It's parameter would be the name of the file to read (in this case, the
-// string variable which represents the file name);
-                FileReader fileReader = new FileReader(fileName);
-
-// The BufferedReader class can wrap around Readers, like FileReader, to buffer
-// the input and improve efficiency.
-// ALWAYS wrap FileReader in BufferedReader
-                BufferedReader bufferedReader = new BufferedReader(fileReader);
-
-// readLine() reads a line of text.
-// A line is considered to be terminated by a new line ('\n'). So Buffered
-// reader would literally read line by line.
-// While there are still lines to read, our program will print the file
-// Always close files
-                bufferedReader.close();
-            } // The catch block performs a specific action depending on the exception
-            catch (FileNotFoundException ex) {
-                System.out.println("Unable to open file '" + fileName + "'");
-// the printStackTrace method will print out an error output stream ("What went
-// wrong?" report);
-
-                ex.printStackTrace();
-            } catch (IOException ex) {
-                System.out.println("Error reading file '" + fileName + "'");
-                ex.printStackTrace();
+                Class.forName("com.mysql.cj.jdbc.Driver");
+                Connection con=DriverManager.getConnection("jdbc:mysql://localhost:3306/myuniversitycourses","root","Thenuri@12");
+                System.out.println(con);
+            } catch (ClassNotFoundException ex) {
+                Logger.getLogger(Course.class.getName()).log(Level.SEVERE, null, ex);
+            } catch (SQLException ex) {
+                Logger.getLogger(Course.class.getName()).log(Level.SEVERE, null, ex);
             }
+		Admin admin = new Admin();
+		File fileName = new File("CRSData.ser");
+		if (!fileName.exists()) {
+			fileName = new File("C:\\ProgramData\\MySQL\\MySQL Server 8.0\\Uploads\\myUniversityCourses.csv");
 
-// STEP 2: TOKENIZE CSV FILE
-// Array list of type User
-// input will represent the csv file as a string so that we may manipulate the
-// file
-            String input = new Scanner(fileName).useDelimiter("\\A").next();
+			// References one line at a time
+			String line = null;
 
-// We remove any information we don't necessarily need in order to get the
-// necessary tokens
-// input=input.replace("Course_Name", " ").replace("Course_Id", "
-// ").replace("Maximum_Students", " ").replace("Current_Students", "
-// ").replace("List_Of_Names", " ").replace("Course_Department",
-// "").replace("Course_Section_Number", " ").replace("Course_Location", " ");
-// The tokenizer will look at each string token within the input
-            StringTokenizer strTokens = new StringTokenizer(input, ",\n");
+			try {
+				// FileReader reads text files as characters as opposed to bytes (like
+				// FileInputStream)
+				// First, we instantiate the file reader class
+				// It's parameter would be the name of the file to read (in this case, the
+				// string variable which represents the file name);
+				FileReader fileReader = new FileReader(fileName);
 
-            int count = 0;
-// While there is still text to parse through within the file
-            while (strTokens.hasMoreTokens()) {
-                if (count > 7) {
-                    String courseName = strTokens.nextToken();
-                    String courseID = strTokens.nextToken();
-                    String test = strTokens.nextToken();
-                    String trimmedTest = test.replace(" ", "");
-                    int maxStudents = Integer.parseInt(trimmedTest);
-                    String test1 = strTokens.nextToken();
-                    String trimmedTest1 = test1.replace(" ", "");
-                    int currentStudents = Integer.parseInt(trimmedTest1);
-                    strTokens.nextToken();
-                    String departmentName = strTokens.nextToken();
-                    String test2 = strTokens.nextToken();
-                    String trimmedTest2 = test2.replace(" ", "");
-                    int courseSection = Integer.parseInt(trimmedTest2);
+				// The BufferedReader class can wrap around Readers, like FileReader, to buffer
+				// the input and improve efficiency.
+				// ALWAYS wrap FileReader in BufferedReader
+				BufferedReader bufferedReader = new BufferedReader(fileReader);
 
-// creates a course list from the elements found
-                    Course c = new Course(courseName, courseID, maxStudents, currentStudents, departmentName,
-                            courseSection);
-                    courseList.add(c);
-                    count++;
-                } else {
-                    strTokens.nextToken();
-                    count++;
-                }
-            }
-        } else {
-            deSerialization();
+				// readLine() reads a line of text.
+				// A line is considered to be terminated by a new line ('\n'). So Buffered
+				// reader would literally read line by line.
+				// While there are still lines to read, our program will print the file
 
-            String fileName2 = "newtext.txt";
-// References one line at a time
-            String line = null;
-            try {
-// FileReader reads text files as characters as opposed to bytes (like
-// FileInputStream)
-// First, we instantiate the file reader class
-// It's parameter would be the name of the file to read (in this case, the
-// string variable which represents the file name);
+				// Always close files
+				bufferedReader.close();
+			}
+			// The catch block performs a specific action depending on the exception
+			catch (FileNotFoundException ex) {
+				System.out.println("Unable to open file '" + fileName + "'");
+				// the printStackTrace method will print out an error output stream ("What went
+				// wrong?" report);
 
-                FileReader fileReader = new FileReader(fileName2);
+				ex.printStackTrace();
+			}
 
-// The BufferedReader class can wrap around Readers, like FileReader, to buffer
-// the input and improve efficiency.
-// ALWAYS wrap FileReader in BufferedReader
-                BufferedReader bufferedReader = new BufferedReader(fileReader);
+			catch (IOException ex) {
+				System.out.println("Error reading file '" + fileName + "'");
+				ex.printStackTrace();
+			}
 
-// readLine() reads a line of text.
-// A line is considered to be terminated by a new line ('\n'). So Buffered
-// reader would literally read line by line.
-// While there are still lines to read, our program will print the file
-                while ((line = bufferedReader.readLine()) != null) {
-//System.out.println(line);
-                    String[] animalsArray = line.split(",");
-                    String firstName = animalsArray[0];
-                    String lastName = animalsArray[1];
-                    Student student = new Student(firstName, lastName);
-                    Admin.masterRegistry.add(student);
-//System.out.println(Admin.masterRegistry.size());
-                }
+			// STEP 2: TOKENIZE CSV FILE
+			// Array list of type User
 
-// Always close files
-                bufferedReader.close();
-            } // The catch block performs a specific action depending on the exception
-            catch (FileNotFoundException ex) {
-                System.out.println("Unable to open file '" + fileName2 + "'");
-// the printStackTrace method will print out an error output stream ("What went
-// wrong?" report);
+			// input will represent the csv file as a string so that we may manipulate the
+			// file
+			String input = new Scanner(fileName).useDelimiter("\\A").next();
 
-                ex.printStackTrace();
-            } catch (IOException ex) {
-                System.out.println("Error reading file '" + fileName2 + "'");
-                ex.printStackTrace();
-            }
+			// We remove any information we don't necessarily need in order to get the
+			// necessary tokens
+			// input=input.replace("Course_Name", " ").replace("Course_Id", "
+			// ").replace("Maximum_Students", " ").replace("Current_Students", "
+			// ").replace("List_Of_Names", " ").replace("Course_Department",
+			// "").replace("Course_Section_Number", " ").replace("Course_Location", " ");
 
-        }
+			// The tokenizer will look at each string token within the input
+			StringTokenizer strTokens = new StringTokenizer(input, ",\n");
 
-        BufferedReader in = new BufferedReader(new InputStreamReader(System.in));
-        System.out.println("Welcome!");
-        System.out.println("Enter '1' to login as Admin");
-        System.out.println("Enter '2' to login as Student");
-        System.out.println("Enter '3' to Exit");
-        String option = in.readLine();
+			int count = 0;
+			// While there is still text to parse through within the file
+			while (strTokens.hasMoreTokens()) {
+				if (count > 7) {
+					String courseName = strTokens.nextToken();
+					String courseID = strTokens.nextToken();
+					String test = strTokens.nextToken();
+					String trimmedTest = test.replace(" ", "");
+					int maxStudents = Integer.parseInt(trimmedTest);
+					String test1 = strTokens.nextToken();
+					String trimmedTest1 = test1.replace(" ", "");
+					int currentStudents = Integer.parseInt(trimmedTest1);
+					strTokens.nextToken();
+					String departmentName = strTokens.nextToken();
+					String test2 = strTokens.nextToken();
+					String trimmedTest2 = test2.replace(" ", "");
+					int courseSection = Integer.parseInt(trimmedTest2);
 
-        // error message
-        while (!option.contentEquals("1") && !option.contentEquals("2") && !option.contentEquals("3")) {
-            System.out.println("Sorry, your input is not valid! Try again.");
-            System.out.println("Enter '1' to login as Admin");
-            System.out.println("Enter '2' to login as Student");
-            System.out.println("Enter '3' to Exit");
-            option = in.readLine();
-        }
+					// creates a course list from the elements found
+					Course c = new Course(courseName, courseID, maxStudents, currentStudents, departmentName,
+							courseSection);
+					courseList.add(c);
+					count++;
+				} else {
+					strTokens.nextToken();
+					count++;
+				}
+			}
+		} else {
+			deSerialization();
 
-        if (option.contentEquals("1")) {
+			String fileName2 = "newtext.txt";
+			// References one line at a time
+			String line = null;
+			try {
+				// FileReader reads text files as characters as opposed to bytes (like
+				// FileInputStream)
+				// First, we instantiate the file reader class
+				// It's parameter would be the name of the file to read (in this case, the
+				// string variable which represents the file name);
 
-            System.out.println("Enter the Admin username:");
-            String userInput = in.readLine();
-            System.out.println("Enter the Admin password:");
-            String passInput = in.readLine();
+				FileReader fileReader = new FileReader(fileName2);
 
-            // error message
-            while (!userInput.contentEquals("admin") || !passInput.contentEquals("admin001")) {
-                if (!userInput.contentEquals("admin")) {
-                    System.out.println("Sorry the username is not correct! Try again.");
-                    System.out.println("Enter the Admin username:");
-                    userInput = in.readLine();
-                    System.out.println("Enter the Admin password:");
-                    passInput = in.readLine();
-                } else if (!passInput.contentEquals("admin001")) {
-                    System.out.println("Sorry the password is not correct! Try again.");
-                    System.out.println("Enter the Admin username:");
-                    userInput = in.readLine();
-                    System.out.println("Enter the Admin password:");
-                    passInput = in.readLine();
-                }
-            }
+				// The BufferedReader class can wrap around Readers, like FileReader, to buffer
+				// the input and improve efficiency.
+				// ALWAYS wrap FileReader in BufferedReader
 
-            System.out.println("Congrats! You have been successfully logged in as an admin!");
-            boolean logout = false;
-            while (!logout) {
-                System.out.println("What would you like to do today?");
-                System.out.println("Enter '1' to Manage Courses");
-                System.out.println("Enter '2' to View Reports");
-                System.out.println("Enter '3' to Exit");
-                String option2 = in.readLine();
-                if (option2.contentEquals("1")) {
+				BufferedReader bufferedReader = new BufferedReader(fileReader);
 
-                    System.out.println("Course Management");
-                    System.out.println("Enter '1' to Create a New Course");
-                    System.out.println("Enter '2' to Delete a Course");
-                    System.out.println("Enter '3' to Edit a Course");
-                    System.out.println("Enter '4' to Display Information for a Given Course");
-                    System.out.println("Enter '5' to Register a Student");
-                    System.out.println("Enter '6' to Exit");
-                    String option3 = in.readLine();
+				// readLine() reads a line of text.
+				// A line is considered to be terminated by a new line ('\n'). So Buffered
+				// reader would literally read line by line.
+				// While there are still lines to read, our program will print the file
 
-                    if (option3.contentEquals("1")) {
-                        admin.createCourse();
-                    } else if (option3.contentEquals("2")) {
-                        admin.deleteCourse();
-                    } else if (option3.contentEquals("3")) {
-                        admin.editCourse();
-                    } else if (option3.contentEquals("4")) {
-                        admin.displayACourse();
-                    } else if (option3.contentEquals("5")) {
-                        admin.registerStudent();
-                    } else {
-                        System.out.println("Thank you & come again! :D");
-                        logout = true;
-                        serialization();
+				while ((line = bufferedReader.readLine()) != null) {
+					//System.out.println(line);
+					String[] animalsArray = line.split(",");
+					String firstName = animalsArray[0];
+					String lastName = animalsArray[1];
+					Student student = new Student(firstName, lastName);
+					Admin.masterRegistry.add(student);
+					//System.out.println(Admin.masterRegistry.size());
+                                }
 
-                        String fileName2 = "newtext.txt";
-                        Scanner scan = new Scanner(System.in);
+				// Always close files
+				bufferedReader.close();
+			}
+			// The catch block performs a specific action depending on the exception
+			catch (FileNotFoundException ex) {
+				System.out.println("Unable to open file '" + fileName2 + "'");
+				// the printStackTrace method will print out an error output stream ("What went
+				// wrong?" report);
 
-                        try {
-                            FileWriter fileWriter = new FileWriter(fileName2);
-                            BufferedWriter bufferedWriter = new BufferedWriter(fileWriter);
+				ex.printStackTrace();
+			}
 
-                            for (int i = 0; i < Admin.masterRegistry.size(); i++) {
-                                String firstName = Admin.masterRegistry.get(i).getFirstName();
-                                String lastName = Admin.masterRegistry.get(i).getLastName();
-                                bufferedWriter.write(firstName + ",");
-                                bufferedWriter.write(lastName + "\n");
-                            }
+			catch (IOException ex) {
+				System.out.println("Error reading file '" + fileName2 + "'");
+				ex.printStackTrace();
+			}
 
-// Always close writer
-                            bufferedWriter.close();
-                            System.out.println("Master Registry recorded!");
-                        } // Always close files
-                        catch (IOException exk) {
-                            System.out.println("Error writing file '" + fileName2 + "'");
-                            exk.printStackTrace();
-                        }
-                    }
+		}
 
-                } else if (option2.contentEquals("2")) {
+		BufferedReader in = new BufferedReader(new InputStreamReader(System.in));
+		System.out.println("Welcome!");
+		System.out.println("Enter '1' to login as Admin");
+		System.out.println("Enter '2' to login as Student");
+		System.out.println("Enter '3' to Exit");
+		String option = in.readLine();
 
-                    System.out.println("View Reports");
-                    System.out.println("Enter '1' to View All Courses");
-                    System.out.println("Enter '2' to View All Full Courses");
-                    System.out.println("Enter '3' to Write to File All Full Courses");
-                    System.out.println("Enter '4' to View Registered Students of Specific Course");
-                    System.out.println("Enter '5' to View All Registered Courses of Specific Student");
-                    System.out.println("Enter '6' to Sort Courses");
-                    System.out.println("Enter '7' to Exit");
-                    String option3 = in.readLine();
+    // error message
+		while (!option.contentEquals("1") && !option.contentEquals("2") && !option.contentEquals("3")) {
+			System.out.println("Sorry, your input is not valid! Try again.");
+			System.out.println("Enter '1' to login as Admin");
+			System.out.println("Enter '2' to login as Student");
+			System.out.println("Enter '3' to Exit");
+			option = in.readLine();
+		}
 
-                    if (option3.contentEquals("1")) {
-                        admin.adminViewAllCourses();
-                    } else if (option3.contentEquals("2")) {
-                        admin.viewFullCourses();
-                    } else if (option3.contentEquals("3")) {
-                        admin.writeToFileFullCourses();
-                    } else if (option3.contentEquals("4")) {
-                        admin.viewRegisteredStudents();
-                    } else if (option3.contentEquals("5")) {
-                        admin.viewAllStudentCourses();
-                    } else if (option3.contentEquals("6")) {
-                        admin.sortCourses();
-                    } else {
-                        System.out.println("Thank you & come again! :D");
-                        logout = true;
-                        serialization();
+		if (option.contentEquals("1")) {
 
-                        String fileName2 = "newtext.txt";
-                        Scanner scan = new Scanner(System.in);
+			System.out.println("Enter the Admin username:");
+			String userInput = in.readLine();
+			System.out.println("Enter the Admin password:");
+			String passInput = in.readLine();
 
-                        try {
-                            FileWriter fileWriter = new FileWriter(fileName2);
-                            BufferedWriter bufferedWriter = new BufferedWriter(fileWriter);
+      // error message
+			while (!userInput.contentEquals("admin") || !passInput.contentEquals("admin001")) {
+				if (!userInput.contentEquals("admin")) {
+					System.out.println("Sorry the username is not correct! Try again.");
+					System.out.println("Enter the Admin username:");
+					userInput = in.readLine();
+					System.out.println("Enter the Admin password:");
+					passInput = in.readLine();
+				} else if (!passInput.contentEquals("admin001")) {
+					System.out.println("Sorry the password is not correct! Try again.");
+					System.out.println("Enter the Admin username:");
+					userInput = in.readLine();
+					System.out.println("Enter the Admin password:");
+					passInput = in.readLine();
+				}
+			}
 
-                            for (int i = 0; i < Admin.masterRegistry.size(); i++) {
-                                String firstName = Admin.masterRegistry.get(i).getFirstName();
-                                String lastName = Admin.masterRegistry.get(i).getLastName();
-                                bufferedWriter.write(firstName + ",");
-                                bufferedWriter.write(lastName + "\n");
-                            }
+			System.out.println("Congrats! You have been successfully logged in as an admin!");
+			boolean logout = false;
+			while (!logout) {
+				System.out.println("What would you like to do today?");
+				System.out.println("Enter '1' to Manage Courses");
+				System.out.println("Enter '2' to View Reports");
+				System.out.println("Enter '3' to Exit");
+				String option2 = in.readLine();
+				if (option2.contentEquals("1")) {
 
-// Always close writer
-                            bufferedWriter.close();
-                            System.out.println("Master Registry recorded!");
-                        } // Always close files
-                        catch (IOException exk) {
-                            System.out.println("Error writing file '" + fileName2 + "'");
-                            exk.printStackTrace();
-                        }
-                    }
+					System.out.println("Course Management");
+					System.out.println("Enter '1' to Create a New Course");
+					System.out.println("Enter '2' to Delete a Course");
+					System.out.println("Enter '3' to Edit a Course");
+					System.out.println("Enter '4' to Display Information for a Given Course");
+					System.out.println("Enter '5' to Register a Student");
+					System.out.println("Enter '6' to Exit");
+					String option3 = in.readLine();
 
-                } else {
-                    System.out.println("Thank you & come again! :D");
-                    logout = true;
-                    serialization();
+					if(option3.contentEquals("1")) {
+						admin.createCourse();
+					} else if (option3.contentEquals("2")) {
+						admin.deleteCourse();
+					} else if (option3.contentEquals("3")) {
+						admin.editCourse();
+					} else if (option3.contentEquals("4")) {
+						admin.displayACourse();
+					} else if (option3.contentEquals("5")) {
+						admin.registerStudent();
+					} else {
+						System.out.println("Thank you & come again! :D");
+						logout = true;
+						serialization();
 
-                    String fileName2 = "newtext.txt";
-                    Scanner scan = new Scanner(System.in);
+						String fileName2 = "newtext.txt";
+						Scanner scan = new Scanner(System.in);
 
-                    try {
-                        FileWriter fileWriter = new FileWriter(fileName2);
-                        BufferedWriter bufferedWriter = new BufferedWriter(fileWriter);
+						try {
+							FileWriter fileWriter = new FileWriter(fileName2);
+							BufferedWriter bufferedWriter = new BufferedWriter(fileWriter);
 
-                        for (int i = 0; i < Admin.masterRegistry.size(); i++) {
-                            String firstName = Admin.masterRegistry.get(i).getFirstName();
-                            String lastName = Admin.masterRegistry.get(i).getLastName();
-                            bufferedWriter.write(firstName + ",");
-                            bufferedWriter.write(lastName + "\n");
-                        }
+							for (int i = 0; i < Admin.masterRegistry.size(); i++) {
+								String firstName = Admin.masterRegistry.get(i).getFirstName();
+								String lastName = Admin.masterRegistry.get(i).getLastName();
+								bufferedWriter.write(firstName + ",");
+								bufferedWriter.write(lastName + "\n");
+							}
 
-// Always close writer
-                        bufferedWriter.close();
-                        System.out.println("Master Registry recorded!");
-                    } // Always close files
-                    catch (IOException exk) {
-                        System.out.println("Error writing file '" + fileName2 + "'");
-                        exk.printStackTrace();
-                    }
-                }
-            }
+							// Always close writer
+							bufferedWriter.close();
+							System.out.println("Master Registry recorded!");
+						}
 
-        } else if (option.contentEquals("2")) {
+						// Always close files
+						catch (IOException exk) {
+							System.out.println("Error writing file '" + fileName2 + "'");
+							exk.printStackTrace();
+						}
+					}
 
-            System.out.println("Please enter your first name:");
-            String firstName = in.readLine();
-            System.out.println("Please enter your last name:");
-            String lastName = in.readLine();
+				} else if (option2.contentEquals("2")) {
 
-            Student searchStudent = new Student(firstName, lastName);
+					System.out.println("View Reports");
+					System.out.println("Enter '1' to View All Courses");
+					System.out.println("Enter '2' to View All Full Courses");
+					System.out.println("Enter '3' to Write to File All Full Courses");
+					System.out.println("Enter '4' to View Registered Students of Specific Course");
+					System.out.println("Enter '5' to View All Registered Courses of Specific Student");
+					System.out.println("Enter '6' to Sort Courses");
+					System.out.println("Enter '7' to Exit");
+					String option3 = in.readLine();
 
-            for (int i = 0; i < Admin.masterRegistry.size(); i++) {
-                if ((Admin.masterRegistry.get(i).getFirstName() != firstName)
-                        && (i == Admin.masterRegistry.size() - 1)) {
-                    System.out.println("Oops! We don't have you in the Student List. Ask an admin to register you!");
-                    System.exit(0);
-                } else {
-                    break;
-                }
-            }
+					if (option3.contentEquals("1")) {
+						admin.adminViewAllCourses();
+					} else if (option3.contentEquals("2")) {
+						admin.viewFullCourses();
+					} else if (option3.contentEquals("3")) {
+						admin.writeToFileFullCourses();
+					} else if (option3.contentEquals("4")) {
+						admin.viewRegisteredStudents();
+					} else if (option3.contentEquals("5")) {
+						admin.viewAllStudentCourses();
+					} else if (option3.contentEquals("6")) {
+						admin.sortCourses();
+					} else {
+						System.out.println("Thank you & come again! :D");
+						logout = true;
+						serialization();
 
-            if ((searchStudent.getUsername() == null) || (searchStudent.getPassword() == null)) {
-                System.out.println("Let's set up your username and password!");
-                System.out.println("Please enter your desired username:");
-                String setUser = in.readLine();
-                System.out.println("Please enter your desired password:");
-                String setPass = in.readLine();
-                for (int i = 0; i < Admin.masterRegistry.size(); i++) {
-                    if ((Admin.masterRegistry.get(i).getFirstName() == firstName)
-                            && (Admin.masterRegistry.get(i).getLastName() == lastName)) {
-                        Admin.masterRegistry.get(i).setUsername(setUser);
-                        Admin.masterRegistry.get(i).setPassword(setPass);
-                        System.out.println("Your username and password has been successfully set! Thanks!");
-                    }
-                }
-            }
+						String fileName2 = "newtext.txt";
+						Scanner scan = new Scanner(System.in);
 
-            System.out.println("Enter your Student username:");
-            String userInput = in.readLine();
-            System.out.println("Enter your Student password:");
-            String passInput = in.readLine();
+						try {
+							FileWriter fileWriter = new FileWriter(fileName2);
+							BufferedWriter bufferedWriter = new BufferedWriter(fileWriter);
 
-            boolean valid = false;
-            while (valid) {
-                Student student = new Student("firstName", "lastName");
-                student.setUsername(userInput);
-                student.setPassword(passInput);
-                if (Admin.masterRegistry.contains(student)) {
-                    valid = true;
-                } else {
-                    System.out.println("Sorry the username is not correct! Try again.");
+							for (int i = 0; i < Admin.masterRegistry.size(); i++) {
+								String firstName = Admin.masterRegistry.get(i).getFirstName();
+								String lastName = Admin.masterRegistry.get(i).getLastName();
+								bufferedWriter.write(firstName + ",");
+								bufferedWriter.write(lastName + "\n");
+							}
 
-                }
-            }
+							// Always close writer
+							bufferedWriter.close();
+							System.out.println("Master Registry recorded!");
+						}
 
-            Student student = new Student(firstName, lastName);
-            System.out.println("Congrats! You have been successfully logged in as " + firstName + " " + lastName + "!");
-            System.out.println("What would you like to do today?");
-            System.out.println("Enter '1' to View All Courses");
-            System.out.println("Enter '2' to View All Available Courses");
-            System.out.println("Enter '3' to Register to a Course");
-            System.out.println("Enter '4' to Withdraw from a Course");
-            System.out.println("Enter '5' to View All Registered Courses");
-            System.out.println("Enter '6' to Exit");
-            String option3 = in.readLine();
+						// Always close files
+						catch (IOException exk) {
+							System.out.println("Error writing file '" + fileName2 + "'");
+							exk.printStackTrace();
+						}
+					}
 
-            if (option3.contentEquals("1")) {
-                student.studentViewAllCourses();
-            } else if (option3.contentEquals("2")) {
-                student.viewAvailableCourses();
-            } else if (option3.contentEquals("3")) {
-                student.registerToCourse();
-            } else if (option3.contentEquals("4")) {
-                student.withdrawFromCourse();
-            } else if (option3.contentEquals("5")) {
-                student.viewAllRegisteredCourses();
-            } else {
-                System.out.println("Thank you & come again! :D");
-                serialization();
+				} else {
+					System.out.println("Thank you & come again! :D");
+					logout = true;
+					serialization();
 
-                String fileName2 = "newtext.txt";
-                Scanner scan = new Scanner(System.in);
+					String fileName2 = "newtext.txt";
+					Scanner scan = new Scanner(System.in);
 
-                try {
-                    FileWriter fileWriter = new FileWriter(fileName2);
-                    BufferedWriter bufferedWriter = new BufferedWriter(fileWriter);
+					try {
+						FileWriter fileWriter = new FileWriter(fileName2);
+						BufferedWriter bufferedWriter = new BufferedWriter(fileWriter);
 
-                    for (int i = 0; i < Admin.masterRegistry.size(); i++) {
-                        String firstName1 = Admin.masterRegistry.get(i).getFirstName();
-                        String lastName1 = Admin.masterRegistry.get(i).getLastName();
-                        bufferedWriter.write(firstName1 + ",");
-                        bufferedWriter.write(lastName1 + "\n");
-                    }
+						for (int i = 0; i < Admin.masterRegistry.size(); i++) {
+							String firstName = Admin.masterRegistry.get(i).getFirstName();
+							String lastName = Admin.masterRegistry.get(i).getLastName();
+							bufferedWriter.write(firstName + ",");
+							bufferedWriter.write(lastName + "\n");
+						}
 
-// Always close writer
-                    bufferedWriter.close();
-                    System.out.println("Master Registry recorded!");
-                } // Always close files
-                catch (IOException exk) {
-                    System.out.println("Error writing file '" + fileName2 + "'");
-                    exk.printStackTrace();
-                }
-            }
+						// Always close writer
+						bufferedWriter.close();
+						System.out.println("Master Registry recorded!");
+					}
 
-        } else {
-            System.out.println("Thank you & come again! :D");
-            serialization();
+					// Always close files
+					catch (IOException exk) {
+						System.out.println("Error writing file '" + fileName2 + "'");
+						exk.printStackTrace();
+					}
+				}
+			}
 
-            String fileName2 = "newtext.txt";
-            Scanner scan = new Scanner(System.in);
+		} else if (option.contentEquals("2")) {
 
-            try {
-                FileWriter fileWriter = new FileWriter(fileName2);
-                BufferedWriter bufferedWriter = new BufferedWriter(fileWriter);
+			System.out.println("Please enter your first name:");
+			String firstName = in.readLine();
+			System.out.println("Please enter your last name:");
+			String lastName = in.readLine();
 
-                for (int i = 0; i < Admin.masterRegistry.size(); i++) {
-                    String firstName = Admin.masterRegistry.get(i).getFirstName();
-                    String lastName = Admin.masterRegistry.get(i).getLastName();
-                    bufferedWriter.write(firstName + ",");
-                    bufferedWriter.write(lastName + "\n");
-                }
+			Student searchStudent = new Student(firstName, lastName);
 
-// Always close writer
-                bufferedWriter.close();
-                System.out.println("Master Registry recorded!");
-            } // Always close files
-            catch (IOException exk) {
-                System.out.println("Error writing file '" + fileName2 + "'");
-                exk.printStackTrace();
-            }
-        }
+			for (int i = 0; i < Admin.masterRegistry.size(); i++) {
+				if ((Admin.masterRegistry.get(i).getFirstName() != firstName)
+						&& (i == Admin.masterRegistry.size() - 1)) {
+					System.out.println("Oops! We don't have you in the Student List. Ask an admin to register you!");
+					System.exit(0);
+				} else {
+					break;
+				}
+			}
 
-    }
+			if ((searchStudent.getUsername() == null) || (searchStudent.getPassword() == null)) {
+				System.out.println("Let's set up your username and password!");
+				System.out.println("Please enter your desired username:");
+				String setUser = in.readLine();
+				System.out.println("Please enter your desired password:");
+				String setPass = in.readLine();
+				for (int i = 0; i < Admin.masterRegistry.size(); i++) {
+					if ((Admin.masterRegistry.get(i).getFirstName() == firstName)
+							&& (Admin.masterRegistry.get(i).getLastName() == lastName)) {
+						Admin.masterRegistry.get(i).setUsername(setUser);
+						Admin.masterRegistry.get(i).setPassword(setPass);
+						System.out.println("Your username and password has been successfully set! Thanks!");
+					}
+				}
+			}
+
+			System.out.println("Enter your Student username:");
+			String userInput = in.readLine();
+			System.out.println("Enter your Student password:");
+			String passInput = in.readLine();
+
+			boolean valid = false;
+			while (valid) {
+				Student student = new Student("firstName", "lastName");
+				student.setUsername(userInput);
+				student.setPassword(passInput);
+				if (Admin.masterRegistry.contains(student)) {
+					valid = true;
+				} else {
+					System.out.println("Sorry the username is not correct! Try again.");
+					
+				}
+			}
+
+			Student student = new Student(firstName, lastName);
+			System.out.println("Congrats! You have been successfully logged in as " + firstName + " " + lastName + "!");
+			System.out.println("What would you like to do today?");
+			System.out.println("Enter '1' to View All Courses");
+			System.out.println("Enter '2' to View All Available Courses");
+			System.out.println("Enter '3' to Register to a Course");
+			System.out.println("Enter '4' to Withdraw from a Course");
+			System.out.println("Enter '5' to View All Registered Courses");
+			System.out.println("Enter '6' to Exit");
+			String option3 = in.readLine();
+
+			if (option3.contentEquals("1")) {
+				student.studentViewAllCourses();
+			} else if (option3.contentEquals("2")) {
+				student.viewAvailableCourses();
+			} else if (option3.contentEquals("3")) {
+				student.registerToCourse();
+			} else if (option3.contentEquals("4")) {
+				student.withdrawFromCourse();
+			} else if (option3.contentEquals("5")) {
+				student.viewAllRegisteredCourses();
+			} else {
+				System.out.println("Thank you & come again! :D");
+				serialization();
+
+				String fileName2 = "newtext.txt";
+				Scanner scan = new Scanner(System.in);
+
+				try {
+					FileWriter fileWriter = new FileWriter(fileName2);
+					BufferedWriter bufferedWriter = new BufferedWriter(fileWriter);
+
+					for (int i = 0; i < Admin.masterRegistry.size(); i++) {
+						String firstName1 = Admin.masterRegistry.get(i).getFirstName();
+						String lastName1 = Admin.masterRegistry.get(i).getLastName();
+						bufferedWriter.write(firstName1 + ",");
+						bufferedWriter.write(lastName1 + "\n");
+					}
+
+					// Always close writer
+					bufferedWriter.close();
+					System.out.println("Master Registry recorded!");
+				}
+
+				// Always close files
+				catch (IOException exk) {
+					System.out.println("Error writing file '" + fileName2 + "'");
+					exk.printStackTrace();
+				}
+			}
+
+		} else {
+			System.out.println("Thank you & come again! :D");
+			serialization();
+
+			String fileName2 = "newtext.txt";
+			Scanner scan = new Scanner(System.in);
+
+			try {
+				FileWriter fileWriter = new FileWriter(fileName2);
+				BufferedWriter bufferedWriter = new BufferedWriter(fileWriter);
+
+				for (int i = 0; i < Admin.masterRegistry.size(); i++) {
+					String firstName = Admin.masterRegistry.get(i).getFirstName();
+					String lastName = Admin.masterRegistry.get(i).getLastName();
+					bufferedWriter.write(firstName + ",");
+					bufferedWriter.write(lastName + "\n");
+				}
+
+				// Always close writer
+				bufferedWriter.close();
+				System.out.println("Master Registry recorded!");
+			}
+
+			// Always close files
+			catch (IOException exk) {
+				System.out.println("Error writing file '" + fileName2 + "'");
+				exk.printStackTrace();
+			}
+		}
+
+	}
 }
