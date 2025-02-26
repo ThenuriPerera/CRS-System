@@ -1,7 +1,7 @@
 Course-Registration-System
 A course registration system (CRS) created using object oriented programming (java).
 
-==========
+==============
 
 Fulfills the following requirements:
 
